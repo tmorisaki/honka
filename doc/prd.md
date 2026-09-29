@@ -1,32 +1,32 @@
-# Honka — Product Requirements Document
+# Honka — プロダクト要求仕様書
 
-> **A shared business context for humans, AI, and software.**
+> **人間・AI・ソフトウェアが共有する Business Context。**
 
-**Status:** v0.1  
-**Product:** Honka  
-**Document role:** Initial product definition and architectural baseline
+**ステータス:** v0.1  
+**プロダクト:** Honka  
+**文書の位置づけ:** 初期プロダクト定義およびアーキテクチャの基準文書
 
 ---
 
-## 1. Product Concept
+## 1. プロダクトコンセプト
 
-Honka is a tool for designing, managing, and exposing the **Business Context** shared by humans, AI, and software.
+Honka は、人間・AI・ソフトウェアが共有する **Business Context（業務文脈）** を設計・管理・提供するためのツールである。
 
-Honka is not primarily an execution platform. Existing systems remain responsible for executing business operations, including Salesforce Flow/Apex, Slack agents, MCP servers, APIs, SAP, and custom applications.
+Honka は業務の実行基盤そのものではない。実際の業務処理は、Salesforce Flow / Apex、Slack Agent、MCP Server、API、SAP、独自アプリケーションなど、既存の実行システムが担う。
 
-Honka stores and exposes the meaning behind those implementations:
+Honka が保持するのは、それらの実装の背後にある意味である。
 
-> **What does this work mean in this organization?**
+> **「この組織では、この仕事は何を意味するのか」**
 
-The durable asset managed by Honka is the organization's own business world model: its processes, concepts, rules, data contracts, capabilities, and implementation mappings.
+Honka が蓄積する長期的な資産は、その組織固有の Business World Model、すなわち業務プロセス、概念、ルール、Data Contract、Capability、実装との対応関係である。
 
-## 2. Name and Philosophy
+## 2. 名前と思想
 
-The name **Honka** comes from the Japanese literary concept of **本歌 (honka)**, the source poem behind the technique of *honkadori*.
+**Honka** という名称は、和歌の本歌取りにおける **「本歌」** に由来する。
 
-In honkadori, a new expression can invoke a much larger body of meaning because the reader understands the original poem behind it.
+本歌取りでは、過去の歌を踏まえた表現を用いることで、読み手が本歌を知っていれば、短い表現からその背後にある情景・意味・文脈まで共有できる。
 
-Honka applies the same idea to business systems.
+Honka は、この構造を業務システムへ持ち込む。
 
 ```text
                  HONKA
@@ -37,41 +37,56 @@ Honka applies the same idea to business systems.
       Human       AI     Software
 ```
 
-A Flow, Apex class, AI agent, diagram, or API is an expression of business intent. Honka preserves the shared context behind those expressions.
+Flow、Apex、AI Agent、業務図、APIなどは、それぞれ業務意図の「表現」である。Honka は、それらの表現の背後にある共通の文脈を保持する。
 
-> **The same work can have many expressions because they share the same Honka.**
+> **同じ本歌を知っているから、異なる表現でも同じ意味を理解できる。**
 
-## 3. Problem
+## 3. 解決する問題
 
-Business meaning is currently fragmented across systems and people:
+現在の企業では、業務の意味がさまざまな場所に分散している。
 
-- Salesforce Flow and Apex
-- APIs and integration code
-- Slack and other collaboration tools
-- spreadsheets
-- documentation and wikis
-- architecture diagrams
-- prompts and agent instructions
-- meeting decisions
-- individual employees' knowledge
+- Salesforce Flow / Apex
+- API・連携コード
+- Slackなどのコラボレーションツール
+- Excel・スプレッドシート
+- ドキュメント・Wiki
+- アーキテクチャ図
+- Prompt・Agent Instructions
+- 会議で決まったルール
+- 担当者個人の知識
 
-An AI asked to "change the contract sending feature" may understand the code but still not reliably know what a Contract means in this organization, why legal approval is required, which actors own each decision, which data is required, what business rules constrain the process, what capability "Send Contract" represents, or why CloudSign is currently used.
+たとえばAIに「契約送信機能を変更して」と指示しても、コードだけから次のことを確実に理解できるとは限らない。
 
-Honka makes this organization-specific context explicit, structured, versioned, and queryable.
+- この会社における「契約」とは何か
+- なぜ法務確認が必要なのか
+- 誰がどの判断を担うのか
+- どのデータが必要なのか
+- どのBusiness Ruleに制約されるのか
+- 「契約送信」というCapabilityが何を意味するのか
+- なぜ現在CloudSignを利用しているのか
+- どこまでが業務要件で、どこからが実装都合なのか
 
-## 4. Product Thesis
+Honka は、こうした組織固有の文脈を明示的・構造的・バージョン管理可能・検索可能な形にする。
 
-Foundation models will continue to improve. As reasoning improves, some value currently placed in prompt engineering, custom instructions, and narrowly tuned agent skills may decrease.
+## 4. プロダクト仮説
 
-Organization-specific context is different. A model cannot intrinsically know what a particular company's concepts, rules, processes, and implementation decisions mean.
+Foundation Modelの推論能力は今後も改善していく。
 
-Therefore Honka optimizes for a durable asset:
+それに伴い、Prompt Engineering、細かなCustom Instructions、モデル能力を補うための限定的なAgent Skillなどの一部は、モデル性能の向上によって相対的な価値が低下する可能性がある。
 
-> **Company-specific business context, not model-specific intelligence.**
+しかし、組織固有の文脈は異なる。
 
-## 5. Product Boundary: Context, Not Execution
+どれだけモデルが賢くなっても、特定企業における概念・ルール・業務・実装判断の意味を、外部から与えずに知ることはできない。
 
-Honka must not evolve by default into a workflow engine. Execution remains in the systems best suited to execute it.
+したがってHonkaが最適化する対象は、
+
+> **モデル固有の知能ではなく、企業固有のBusiness Contextである。**
+
+## 5. プロダクト境界 — Context, not Execution
+
+Honka は、原則としてWorkflow Engineへ進化させない。
+
+業務の実行は、それを最も適切に実行できる既存システムに任せる。
 
 ```text
                          HONKA
@@ -83,18 +98,24 @@ Honka must not evolve by default into a workflow engine. Execution remains in th
      Flow / Apex          MCP              API
 ```
 
-Honka describes what a capability means, what it requires, and which implementation currently realizes it. It does not need to invoke that implementation itself.
+Honka はCapabilityが何を意味し、何を必要とし、現在どの実装によって実現されているかを記述する。
 
-This separates:
+Honka自身が、その実装を呼び出す必要はない。
+
+つまり、
 
 - **Context / Control Plane — Honka**
-- **Execution Plane — existing systems**
+- **Execution Plane — 既存システム**
 
-This boundary is a core product principle.
+と分離する。
+
+この境界はHonkaの中核的な設計原則である。
 
 ## 6. Business Graph
 
-The core representation is a **Semantic Business Graph**.
+Honkaの中心表現は **Semantic Business Graph** とする。
+
+初期階層は次の3層とする。
 
 ```text
 Value Chain
@@ -106,33 +127,37 @@ Business Flow
 
 ### 6.1 Value Chain
 
-Represents how the organization creates value. This layer is intentionally loose and suitable for broad, exploratory modeling.
+組織がどのように価値を生み出しているかを表現する。
+
+この層は、探索的に業務を整理できるよう、意図的に自由度を高くする。
 
 ### 6.2 High-level Process
 
-Represents major business activities such as sales, contracting, fulfillment, or billing. This layer remains relatively flexible.
+営業、契約、請求、提供など、大きな業務活動を表現する。
+
+この層も比較的柔軟に扱う。
 
 ### 6.3 Business Flow
 
-Represents concrete business behavior.
+具体的な業務の流れを表現する。
 
 ```text
-Create Contract
-      |
-Legal Review
-      |
-Approval
-      |
-Send Contract
+[契約作成]
+     |
+[法務確認]
+     |
+[承認]
+     |
+[契約送信]
 ```
 
-Business Flow is where stronger semantics begin.
+Business Flowから、より強いSemanticを持たせる。
 
-## 7. Semantic Nodes
+## 7. Semantic Node
 
-A Business Flow node can progressively acquire structured meaning.
+Business FlowのNodeには、段階的に構造化された意味を付与できる。
 
-A semantic node may contain:
+Semantic Nodeは、必要に応じて次の情報を持つ。
 
 - Description
 - Actor / Role
@@ -144,21 +169,25 @@ A semantic node may contain:
 - Exceptions
 - Implementation References
 
-Not every field must be required.
+すべてを必須にはしない。
 
-> **Loose inside, strict at boundaries.**
+設計思想は、
 
-Users should be able to begin with an informal model and progressively make it machine-readable.
+> **中は柔らかく、境界は硬く。**
+
+ユーザーは曖昧な業務図から始め、必要に応じて徐々に機械可読なモデルへ育てられる。
 
 ## 8. Data Model
 
-The Data Model is not embedded inside the Business Flow. Business Flow and Business Data Model are peer concepts.
+Data ModelはBusiness Flow内部に埋め込まない。
+
+Business FlowとBusiness Data Modelは対等な概念として扱う。
 
 ```text
 Business Flow <----> Business Data Model
 ```
 
-Honka also separates business concepts from physical implementation.
+さらに、業務上の概念と物理実装を分離する。
 
 ```text
 Business Data Model
@@ -168,7 +197,7 @@ Business Data Model
 Physical Data Model
 ```
 
-Example business model:
+Business Data Modelの例:
 
 ```text
 Contract
@@ -177,7 +206,7 @@ Contract
  '- approvalStatus
 ```
 
-Possible Salesforce mapping:
+Salesforce上での物理実装例:
 
 ```text
 Contract__c
@@ -186,11 +215,11 @@ TotalAmount__c
 ApprovalStatus__c
 ```
 
-The Business Data Model must remain valid even if Salesforce or another implementation platform is replaced.
+Salesforce等の実装プラットフォームが置き換わっても、Business Data Model自体は維持できなければならない。
 
-## 9. Data Contracts
+## 9. Data Contract
 
-A Business Flow node does not consume the entire Data Model. It declares the data boundary relevant to that operation.
+Business FlowのNodeはData Model全体を扱うのではなく、その業務操作に必要なデータ境界を宣言する。
 
 ```yaml
 LegalReview:
@@ -202,47 +231,75 @@ LegalReview:
     - Contract.legalReviewed
 ```
 
-The compiler can detect inconsistencies such as:
+Compilerは、たとえば次の不整合を検出できる。
 
-- a referenced field does not exist;
-- downstream requires data that upstream never supplies;
-- incompatible data types;
-- missing mappings;
-- unresolved references.
+- 参照しているFieldがData Modelに存在しない
+- 下流が要求するDataを上流が供給していない
+- Data Typeが互換でない
+- Mappingが存在しない
+- Referenceを解決できない
 
-Honka should support both authoring directions.
+Authoringは両方向を許容する。
 
-### Data-model-first
+### Data Model First
 
-An existing model is available and a node selects the fields it requires, reads, or writes.
+既存Data Modelから、Nodeが必要・参照・更新するFieldを選択する。
 
-### Contract-first
+### Contract First
 
-A node declares a requirement such as `Contract.legalReviewed: boolean`. If the field does not exist, Honka can propose adding it to the Business Data Model.
+Node側から、
 
-## 10. Business Rules
+```text
+Contract.legalReviewed: boolean
+```
 
-Business Rules represent explicit constraints on business behavior.
+のような要件を宣言する。
 
-Rules should be strongly typed and independently referenceable where practical. They are among the strictest semantic boundaries in Honka because they may be consumed by humans, AI, validation, testing, and implementation tooling.
+Fieldが存在しなければ、HonkaがBusiness Data Modelへの追加を提案できる。
 
-## 11. Capabilities
+## 10. Business Rule
 
-A Capability represents **what the business can do**, independently of how that capability is implemented.
+Business Ruleは、業務上の明示的な制約を表現する。
 
-Example: `SendContract`.
+可能な限り型を持ち、独立して参照可能にする。
 
-Possible implementation references include Salesforce Apex, CloudSign MCP, REST API, Human Operation, or Agent.
+Business Ruleは人間だけでなく、AI、Validator、Test、実装Toolingから利用される可能性があるため、Honkaの中でも特に厳密なSemantic Boundaryとする。
+
+## 11. Capability
+
+Capabilityは、実装方法とは独立した、
+
+> **「業務として何ができるか」**
+
+を表す。
+
+例:
+
+```text
+SendContract
+```
+
+現在のImplementation Referenceとして、たとえば次を関連付けられる。
+
+- Salesforce Apex
+- CloudSign MCP
+- REST API
+- Human Operation
+- Agent
+
+重要なのは、
 
 ```text
 Business Capability != Implementation
 ```
 
-Honka owns the semantic relationship between them, not necessarily their execution.
+という分離である。
+
+Honkaが管理するのは両者の意味上の対応関係であり、必ずしもExecutionではない。
 
 ## 12. Semantic Compiler
 
-Honka behaves in part like a **Business Context Compiler**.
+Honkaは **Business Context Compiler** としての性質を持つ。
 
 ```text
 Metadata
@@ -260,9 +317,11 @@ Validator
 IRs
 ```
 
-The Semantic Graph is the core product representation. Neither the UI nor AI should treat raw YAML or JSON as the canonical conceptual model.
+Honkaの中核表現はSemantic Graphである。
 
-From the Semantic Graph, Honka can generate purpose-specific intermediate representations:
+UIもAIも、Raw YAML / JSONを概念上のSource of Truthとして直接扱わない。
+
+Semantic Graphから、用途ごとのIntermediate Representationを生成する。
 
 - Designer IR
 - AI Context IR
@@ -272,17 +331,24 @@ From the Semantic Graph, Honka can generate purpose-specific intermediate repres
 
 ## 13. AI Context Compilation
 
-AI should not receive the entire repository by default.
+AIにRepository全体を無条件に渡さない。
 
-For a request involving `SendContract`, Honka should compile a minimal relevant context containing the selected semantic node, nearby upstream and downstream nodes, referenced Data Contracts, Business Rules, Capabilities, and relevant implementation references.
+たとえば `SendContract` に関する依頼なら、Honkaは必要なContextだけをCompileする。
 
-This provides organization-specific context while avoiding unnecessary context-window consumption.
+- 対象Semantic Node
+- 近傍の上流・下流Node
+- 関連Data Contract
+- Business Rule
+- Capability
+- 関連Implementation Reference
+
+これにより、企業固有の文脈をAIへ提供しつつ、Context Windowの浪費を抑える。
 
 ## 14. MCP Interface
 
-Honka should expose its Business Context through an MCP server.
+HonkaはBusiness Contextを外部AIへ提供するため、MCP Serverを持つ。
 
-Initial conceptual tools include:
+初期のConceptual Toolは次のようなものを想定する。
 
 ```text
 find_process
@@ -292,12 +358,12 @@ get_data_contract
 get_capabilities
 ```
 
-Example:
+たとえば、
 
 ```text
 User
   |
-"Change the contract sending feature"
+「契約送信機能を変更して」
   |
 Codex / Development Agent
   |
@@ -307,14 +373,16 @@ get_context("contract sending")
   |
 Business Context
   |
-Code analysis / change
+Code Analysis / Change
 ```
 
-The MCP interface allows increasingly capable AI systems to consume stable organization-specific context without Honka having to own the AI model itself.
+という流れになる。
 
-## 15. AI-Assisted Editing
+MCP Interfaceは、Honka自身がAI Modelを所有しなくても、より高性能になっていくAIへ安定した企業固有Contextを供給できる重要な出口である。
 
-AI must not directly mutate canonical business metadata.
+## 15. AIによる編集
+
+AIはCanonicalなBusiness Metadataを直接変更しない。
 
 ```text
 AI
@@ -328,15 +396,27 @@ Human Review
 Commit
 ```
 
-This is conceptually a **Pull Request for Business Context**.
+これは概念的には、
 
-A user may select an area of the canvas and ask whether anything is wrong. AI can inspect the Semantic Graph, identify a problematic path, and present a ghost/preview modification. Accepting the proposal produces a metadata patch that still passes validation and review.
+> **Business Contextに対するPull Request**
 
-## 16. Git-First Source of Truth
+である。
 
-Canonical semantic Business Context is stored as metadata in Git.
+たとえばユーザーがCanvas上の一部を選択して、
 
-A possible repository structure is:
+> 「この辺、なんかおかしくない？」
+
+と尋ねる。
+
+AIはSemantic Graphを読み、承認を迂回する経路などを発見し、Canvas上へGhost / Previewとして変更案を提示する。
+
+Acceptされた変更案はMetadata Patchとなり、ValidationとReviewを経て反映される。
+
+## 16. Git First
+
+CanonicalなSemantic Business Contextは、MetadataとしてGitに保存する。
+
+Repository構成例:
 
 ```text
 /value-chains
@@ -350,22 +430,35 @@ A possible repository structure is:
 /implementations
 ```
 
-Semantic metadata and visual layout metadata should be separated:
+Semantic MetadataとVisual Layout Metadataは分離する。
 
 ```text
 contract-flow.yaml
 contract-flow.layout.yaml
 ```
 
-Moving a node by 20 pixels must not create noise in semantic diffs.
+Nodeを20px移動しただけでSemantic Diffを汚してはならない。
 
-For technical users, this remains normal Git history. For nontechnical users, the UI can expose Change History, Change Proposal, Review, and Restore Previous Version. Internally these map to metadata patches, validation, commits, and optionally pull requests.
+技術者には通常のGit Historyとして扱える。
+
+非技術者にはUI上で、
+
+- 変更履歴
+- 変更案
+- レビュー
+- 以前の状態に戻す
+
+などとして提示する。
+
+内部ではMetadata Patch、Validation、Commit、必要に応じてPull Requestへ対応する。
 
 ## 17. Canvas UX
 
-The interaction model should feel closer to **Miro than Figma or a rigid BPMN editor**.
+操作感は **FigmaよりMiroに近いもの** とする。
 
-The surface should support fluid whiteboard behavior:
+BPMN Editorのように最初から厳密な形式を要求しない。
+
+Canvasには次のようなObjectを配置できる。
 
 - Sticky
 - Text
@@ -373,17 +466,19 @@ The surface should support fluid whiteboard behavior:
 - Connector
 - Semantic Node
 
-A user should be able to begin informally:
+ユーザーは最初、
 
 ```text
-[Create contract]
-       |
-[Ask legal]
-       |
-[Send]
+[契約つくる]
+      |
+[法務に確認]
+      |
+[送る]
 ```
 
-and progressively formalize it:
+程度から始めてよい。
+
+そこから徐々に、
 
 ```text
 Sticky
@@ -399,15 +494,19 @@ Capability
 Implementation Mapping
 ```
 
-The surface is a whiteboard. The underlying model is typed metadata.
+へSemanticを強化する。
+
+> **表面はホワイトボード、裏面は型付きMetadata。**
 
 ## 18. Strictness Gradient
 
-Honka should not require the entire business world to be formalized upfront.
+Honkaは、最初から企業活動のすべてを形式化することを要求しない。
+
+初期の厳密さは概ね次の勾配とする。
 
 | Layer | Strictness |
 | --- | --- |
-| Value Chain | Very loose |
+| Value Chain | Very Loose |
 | High-level Process | Loose |
 | Node Description | Loose |
 | Flow Transition | Medium |
@@ -415,19 +514,21 @@ Honka should not require the entire business world to be formalized upfront.
 | Data Contract | Strict |
 | Business Rule | Strict |
 
-The closer information gets to an AI/system boundary, the stronger its semantics should become.
+AIやSystemとのBoundaryへ近づくほど、Semanticを強くする。
 
 ## 19. Frontend Architecture
 
-Initial frontend direction:
+初期Frontendは次を基本案とする。
 
 - React
 - TypeScript
-- React Flow or equivalent node-based canvas library
-- Zustand or equivalent lightweight local state
-- Zod or equivalent schema validation
+- React Flow または同等のNode-based Canvas Library
+- Zustand または同等の軽量Local State
+- Zod または同等のSchema Validation
 
-Canvas interaction should be local-first. Pointer movement, dragging, connecting nodes, and text editing must not require a server round trip.
+Canvas InteractionはLocal Firstとする。
+
+Pointer Movement、Drag、Node Connection、Text EditingのたびにServer Round Tripを発生させない。
 
 ```text
 Browser State
@@ -439,11 +540,13 @@ Draft Service
 Server
 ```
 
-Undo/redo should initially be local. Realtime collaboration and CRDT technology such as Yjs are explicitly not MVP requirements.
+Undo / RedoもまずLocalで実現する。
+
+Yjs等を利用したRealtime Collaboration / CRDTはMVP要件に含めない。
 
 ## 20. Backend Architecture
 
-Start with a **TypeScript modular monolith**.
+初期Backendは **TypeScript Modular Monolith** とする。
 
 ```text
 Honka App
@@ -457,13 +560,15 @@ Honka App
  '- Job Worker
 ```
 
-Do not introduce microservices merely to represent these boundaries.
+論理的なModule Boundaryを表現するためだけにMicroservices化しない。
 
-Compiler and Validator packages should remain infrastructure-independent pure TypeScript wherever practical. They must be runnable from CLI and CI without requiring the application database.
+Compiler / Validatorは、可能な限りInfrastructure IndependentなPure TypeScript Packageとして実装する。
 
-## 21. Monorepo Direction
+CLIやCIから、Application Databaseなしでも実行できる状態を維持する。
 
-A possible initial structure:
+## 21. Monorepo
+
+初期構成案:
 
 ```text
 honka/
@@ -480,7 +585,7 @@ honka/
 └─ infra/
 ```
 
-These are architectural boundaries, not a requirement to deploy each package independently.
+これはArchitecture Boundaryであり、それぞれを独立Deploymentすることを意味しない。
 
 ## 22. Infrastructure
 
@@ -505,35 +610,53 @@ Managed PostgreSQL
 Git Provider / Repository
 ```
 
-Initial architecture should avoid unnecessary operational complexity.
+初期段階では不要な運用複雑性を持ち込まない。
 
-Not required initially:
+少なくとも初期には次を必要としない。
 
 - Kubernetes
 - Neo4j
 - Kafka
-- dedicated vector database
-- function-per-event serverless architecture
+- Dedicated Vector Database
+- Function-per-event型のServerless Architecture
 
-A managed container is preferred over a FaaS-heavy architecture to keep execution behavior and cost easier to reason about.
+Execution BehaviorとCostを予測しやすくするため、FaaS中心ではなくManaged Containerを基本とする。
 
-## 23. Git and PostgreSQL Responsibilities
+## 23. GitとPostgreSQLの責務
 
 ### Git
 
-Git is the authoritative source of truth for semantic Business Context.
+Semantic Business ContextのAuthoritative Source of Truth。
 
 ### PostgreSQL
 
-PostgreSQL stores application/service state such as Users, Workspaces, Permissions, Drafts, Editing State, Comments, AI Conversations when retained, Git Connection Metadata, Job State, Audit Logs, Indexes, and Projections.
+Application / Service運用上の状態を保持する。
 
-The Semantic Graph should be reconstructable from canonical Git metadata. The operational database is not the semantic source of truth.
+例:
 
-Production should use managed PostgreSQL. Local development and integration testing may use PostgreSQL containers.
+- Users
+- Workspaces
+- Permissions
+- Drafts
+- Editing State
+- Comments
+- 必要に応じたAI Conversations
+- Git Connection Metadata
+- Job State
+- Audit Logs
+- Indexes / Projections
+
+Semantic GraphはCanonicalなGit Metadataから再構築可能でなければならない。
+
+Operational DatabaseをSemantic Source of Truthにはしない。
+
+ProductionではManaged PostgreSQLを利用する。
+
+Local DevelopmentおよびIntegration TestではPostgreSQL Containerを利用してよい。
 
 ## 24. MVP
 
-The MVP should prove the core thesis rather than attempt to become a complete enterprise architecture suite.
+MVPでは巨大なEnterprise Architecture Suiteを作るのではなく、Honkaの中核仮説を検証する。
 
 ```text
 Canvas
@@ -551,26 +674,28 @@ AI Context
 Honka MCP
 ```
 
-The central validation question is:
+MVPで検証すべき問いは、
 
-> **Can humans naturally describe business context, structure it progressively, and provide it to AI in a way that materially improves the AI's understanding of organization-specific work?**
+> **人間が自然に記述したBusiness Contextを段階的に構造化し、それをAIへ提供することで、AIが企業固有の仕事をより正しく理解できるか。**
 
-Workflow execution is not an MVP validation target.
+である。
+
+Workflow ExecutionはMVPの検証対象ではない。
 
 ## 25. Competitive Boundary
 
-Honka occupies a different layer from workflow engines.
+HonkaはWorkflow Engineとは異なるLayerを担当する。
 
 ```text
 Workflow Engine
-"How is the work executed?"
+「業務をどう実行するか」
         ^
         |
       HONKA
-"What does the work mean?"
+「その業務は何を意味するか」
 ```
 
-It also differs from a general-purpose whiteboard.
+また、汎用Whiteboardとも異なる。
 
 ```text
 Whiteboard
@@ -583,43 +708,45 @@ Business Context
    -> Software Understanding
 ```
 
-The goal is not simply "AI that understands diagrams." The goal is a durable, structured shared context layer.
+目標は単なる「AIがDiagramを理解すること」ではない。
+
+**永続的で構造化されたShared Business Context Layer** を作ることである。
 
 ## 26. Core Design Principles
 
 ### 1. Context, not Execution
 
-Honka preserves the meaning of work. Existing systems execute it.
+Honkaは業務を実行するのではなく、その意味を保持する。Executionは既存システムが担う。
 
 ### 2. Semantic Graph is the Core
 
-The canvas, YAML, database, and generated representations are interfaces to or projections of the Semantic Graph.
+Canvas、YAML、Database、各種生成表現は、Semantic GraphへのInterfaceまたはProjectionである。
 
 ### 3. Git is the Source of Truth
 
-Organization-specific business context is versioned metadata.
+企業固有のBusiness ContextをVersioned Metadataとして管理する。
 
 ### 4. Loose Inside, Strict at Boundaries
 
-Human thinking remains flexible. Boundaries consumed by AI and software become typed and validated.
+人間の思考は柔軟なまま保ち、AI / SoftwareとのBoundaryだけを型付け・検証する。
 
 ### 5. One Honka, Many Expressions
 
-Human-facing canvas, AI Context, tests, platform mappings, and implementation references are generated from or grounded in the same underlying business context.
+Human-facing Canvas、AI Context、Test、Platform Mapping、Implementation Referenceは、すべて同じBusiness ContextにGroundingされる。
 
 > **One Honka, Many Expressions.**
 
-## 27. Explicit Non-Goals for v0.1
+## 27. v0.1の明示的なNon-goals
 
-Honka v0.1 is not intended to be:
+Honka v0.1は、次のものを目指さない。
 
-- a general workflow runtime;
-- a replacement for Salesforce Flow, Camunda, Temporal, or other execution engines;
-- a BPMN-first modeling suite;
-- a generic diagramming application;
-- an AI model training platform;
-- a full enterprise data catalog;
-- a source-code repository replacement;
-- a mandatory graph-database architecture.
+- 汎用Workflow Runtime
+- Salesforce Flow、Camunda、Temporal等のExecution Engineの置き換え
+- BPMN FirstのModeling Suite
+- 汎用Diagram Application
+- AI Model Training Platform
+- 完全なEnterprise Data Catalog
+- Source Code Repositoryの置き換え
+- Graph Databaseの採用を前提としたArchitecture
 
-These boundaries may be revisited only when they support the core Business Context thesis rather than dilute it.
+これらは、HonkaのBusiness Contextという中核仮説を強化する場合にのみ、将来再検討する。
