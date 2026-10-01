@@ -560,6 +560,10 @@ Meeting 4
 
 Exit Ruleが成立するまで同一Node上でBusiness Workを継続できる。
 
+Node自身はLoop、Backtracking、Branchingを定義しない。
+
+同一Nodeへの再訪やNode間のLoop、分岐、合流はBusiness Flowが保持するTransition Graphによって表現する。
+
 ---
 
 # 21. MEDDIC Example
@@ -1159,6 +1163,57 @@ Git diffの安定性のみを目的としてBusiness Semantic ModelへIDを追�
 
 ---
 
+## ADR-019: NodeにFlow Topologyを保持しない
+
+**Status:** Accepted
+
+### Context
+
+Business Flowでは、Node間のLoop、Backtracking、Branching、Mergeが発生する。
+
+これらをNode自身の `next`、`previous`、`order`、`scope` 等として保持すると、NodeのBusiness Workとしての意味と、特定Business Flow上の配置・接続関係が混在する。
+
+### Decision
+
+Node SchemaはBusiness WorkそのもののSemantic Contextのみを定義する。
+
+以下はNode Schemaに保持しない。
+
+```text
+Scope membership
+Node ordering
+Node-to-Node transitions
+Branching
+Merge
+Loop structure
+Flow topology
+```
+
+NodeがどのScopeに配置され、どのNodeへ遷移可能かはBusiness Flow側のCompositionおよびTransition Graphが定義する。
+
+同一Nodeへの再訪やLoopもNode自身の属性ではなく、Transition Graphによって表現する。
+
+### Rejected
+
+```text
+node.scope
+node.order
+node.next
+node.previous
+node.transitions
+node.branches
+```
+
+等をNode Schemaに保持する方式。
+
+### Consequences
+
+Nodeは特定のBusiness Flow Topologyから独立したAddressable Semantic Resourceとして扱える。
+
+同一Nodeを異なるFlowまたは異なるScope Compositionから参照することをSemantic Model上妨げない。
+
+---
+
 # 26. Semantic Graph Representation
 
 Node-local ElementはSemantic Graphへ展開できる。
@@ -1213,9 +1268,18 @@ Prompt implementation
 Implementation-specific error
 Internal runtime identity
 UI selection state
+Scope membership
+Node ordering
+Node-to-Node transitions
+Branching
+Merge
+Loop structure
+Flow topology
 ```
 
-これらはCapability、Implementation、Compiler、RuntimeまたはUI Layerによって管理する。
+Implementation固有情報はCapability、Implementation、Compiler、RuntimeまたはUI Layerによって管理する。
+
+Scope membershipおよびFlow TopologyはBusiness Flow側のComposition / Transition Graphによって管理する。
 
 Nodeは以下を記述する。
 
